@@ -1,0 +1,12 @@
+---
+- name: Disable root SSH login
+  become: true
+  ansible.builtin.blockinfile:
+    path: /etc/ssh/sshd_config
+    insertbefore: BOF
+    marker: "# {mark} ANSIBLE ROOT SSH POLICY"
+    block: |
+      PermitRootLogin no
+    backup: true
+    validate: "/usr/sbin/sshd -t -f %s"
+  notify: Reload sshd
